@@ -6,6 +6,9 @@ class Settings(BaseSettings):
 
     app_name: str = "media-proxy-api"
     cors_origins: list[str] = ["http://localhost:5173"]
+    mongo_uri: str = "mongodb://localhost:27017"
+    mongo_db: str = "media_proxy"
+    crawl_timeout_seconds: float = 15.0
 
 
 settings = Settings()
