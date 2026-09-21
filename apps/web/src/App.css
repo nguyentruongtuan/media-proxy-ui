@@ -4,3 +4,53 @@ main {
   padding: 0 1rem;
   font-family: system-ui, sans-serif;
 }
+
+.watch-form {
+  margin-bottom: 2rem;
+}
+
+.watch-form__row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.watch-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.watch-form input:focus {
+  outline: 2px solid var(--accent-border);
+  border-color: var(--accent);
+}
+
+.watch-form input[aria-invalid='true'] {
+  border-color: #d93025;
+}
+
+.watch-form button {
+  padding: 0.5rem 1.25rem;
+  font: inherit;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.watch-form__error {
+  margin-top: 0.5rem;
+  text-align: left;
+  color: #d93025;
+}
+
+.watched {
+  margin-bottom: 1rem;
+  overflow-wrap: anywhere;
+}
