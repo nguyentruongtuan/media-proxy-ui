@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { getHealth } from './api/client'
+import { createUrl, getHealth, type UrlRecord } from './api/client'
 import { WatchForm } from './components/WatchForm'
 import './App.css'
 
 function App() {
   const [status, setStatus] = useState('checking…')
-  const [watchedUrl, setWatchedUrl] = useState<string | null>(null)
+  const [watched, setWatched] = useState<UrlRecord | null>(null)
 
   useEffect(() => {
     getHealth()
@@ -13,13 +13,17 @@ function App() {
       .catch((error: Error) => setStatus(`unreachable (${error.message})`))
   }, [])
 
+  const handleWatch = async (url: string) => {
+    setWatched(await createUrl(url))
+  }
+
   return (
     <main>
       <h1>Media Proxy</h1>
-      <WatchForm onWatch={setWatchedUrl} />
-      {watchedUrl && (
+      <WatchForm onWatch={handleWatch} />
+      {watched && (
         <p className="watched">
-          Watching: <code>{watchedUrl}</code>
+          Saved: <code>{watched.url}</code>
         </p>
       )}
       <p>

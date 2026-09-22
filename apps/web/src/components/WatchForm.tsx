@@ -2,22 +2,33 @@ import { useState, type FormEvent } from 'react'
 import { isValidUrl } from '../lib/url'
 
 type WatchFormProps = {
-  onWatch: (url: string) => void
+  // Rejecting shows the error's message under the input.
+  onWatch: (url: string) => Promise<void>
 }
 
 export function WatchForm({ onWatch }: WatchFormProps) {
   const [value, setValue] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (submitting) return
     const url = value.trim()
     if (!isValidUrl(url)) {
       setError('Please enter a valid URL (starting with http:// or https://).')
       return
     }
     setError(null)
-    onWatch(url)
+    setSubmitting(true)
+    try {
+      await onWatch(url)
+      setValue('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not save the URL.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -36,7 +47,9 @@ export function WatchForm({ onWatch }: WatchFormProps) {
             if (error) setError(null)
           }}
         />
-        <button type="submit">Watch</button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Saving…' : 'Watch'}
+        </button>
       </div>
       {error && (
         <p id="watch-form-error" className="watch-form__error" role="alert">
