@@ -68,3 +68,7 @@ export type UrlRecord = {
 }
 
 export const createUrl = (url: string) => apiPost<UrlRecord>('/urls', { url })
+
+export const listUrls = () => apiGet<UrlRecord[]>('/urls')
+
+export const crawlUrl = (id: string) => apiPost<UrlRecord>(`/urls/${id}/crawl`, undefined)
