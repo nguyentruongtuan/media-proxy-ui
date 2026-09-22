@@ -1,11 +1,24 @@
 import { useEffect, useState } from 'react'
-import { createUrl, getHealth, type UrlRecord } from './api/client'
-import { WatchForm } from './components/WatchForm'
+import { getHealth } from './api/client'
+import { UrlListPage } from './pages/UrlListPage'
+import { WatchPage } from './pages/WatchPage'
 import './App.css'
+
+const PAGES = {
+  '#/': { label: 'Watch', component: WatchPage },
+  '#/urls': { label: 'URLs', component: UrlListPage },
+} as const
+
+type PageHash = keyof typeof PAGES
+
+// Hash routing keeps the UI deployable as static files with no server rewrites.
+function currentPage(): PageHash {
+  return window.location.hash in PAGES ? (window.location.hash as PageHash) : '#/'
+}
 
 function App() {
   const [status, setStatus] = useState('checking…')
-  const [watched, setWatched] = useState<UrlRecord | null>(null)
+  const [page, setPage] = useState<PageHash>(currentPage)
 
   useEffect(() => {
     getHealth()
@@ -13,19 +26,25 @@ function App() {
       .catch((error: Error) => setStatus(`unreachable (${error.message})`))
   }, [])
 
-  const handleWatch = async (url: string) => {
-    setWatched(await createUrl(url))
-  }
+  useEffect(() => {
+    const onHashChange = () => setPage(currentPage())
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const Page = PAGES[page].component
 
   return (
     <main>
       <h1>Media Proxy</h1>
-      <WatchForm onWatch={handleWatch} />
-      {watched && (
-        <p className="watched">
-          Saved: <code>{watched.url}</code>
-        </p>
-      )}
+      <nav className="nav">
+        {(Object.keys(PAGES) as PageHash[]).map((hash) => (
+          <a key={hash} href={hash} aria-current={hash === page ? 'page' : undefined}>
+            {PAGES[hash].label}
+          </a>
+        ))}
+      </nav>
+      <Page />
       <p>
         API status: <code>{status}</code>
       </p>

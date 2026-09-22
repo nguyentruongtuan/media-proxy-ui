@@ -54,3 +54,61 @@ main {
   margin-bottom: 1rem;
   overflow-wrap: anywhere;
 }
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.nav a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav a[aria-current='page'] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.url-list {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.url-list th,
+.url-list td {
+  padding: 0.5rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.url-list th {
+  color: var(--text-h);
+}
+
+.url-list__url {
+  overflow-wrap: anywhere;
+}
+
+.url-list button {
+  padding: 0.25rem 0.75rem;
+  font: inherit;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.url-list button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.url-list__error {
+  margin: 0.25rem 0 0;
+  color: #d93025;
+}
